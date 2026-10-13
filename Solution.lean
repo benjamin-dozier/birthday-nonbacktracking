@@ -1,3 +1,5 @@
+module
+
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Combinatorics.Graph.Basic
