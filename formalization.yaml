@@ -50,17 +50,17 @@ classification:
 
 # project status
 status:
-  scope: ""                    # describe the scope of the project
+  scope: "The claimed theorem is proved, using only the three standard Lean axioms. "                    # describe the scope of the project
   # Count unresolved proof-development sorries only. Exclude the deliberate
   # placeholder sorry in a Comparator challenge module.
   sorry_count: 0
   # Likewise, count only unresolved sorries in proof-development definitions,
   # not deliberate definition holes in Comparator challenge modules.
   sorry_in_definitions: 0
-  axioms: []                   # list all axioms used (including standard axioms such as `Quot.sound`)
+  axioms: ["propext", "Quot.sound", "Classical.choice"]              # list all axioms used (including standard axioms such as `Quot.sound`)
   main_results:                # list the main results of the project
-  - declaration: ""            # declaration proving this main result
-    file: ""                   # file containing the declaration
+  - declaration: "birthday_paradox"            # declaration proving this main result
+    file: "Solution.lean"                   # file containing the declaration
     # Count unresolved sorries in the proved declaration, not the deliberate
     # placeholder in its Comparator challenge module.
     sorry_count: 0
@@ -74,7 +74,7 @@ status:
 automation:                    # [required]
   methods:                     # [required] one entry per distinct phase/run/tool
     - method: "agent"               # [required] manual | copilot | agent | autonomous | other
-      models: [Codex GPT-5.6 Sol]               # e.g. ["claude-opus-4-7", "gpt-5"]
+      models: "Codex GPT-5.6 Sol"               # e.g. ["claude-opus-4-7", "gpt-5"]
       framework: ""            # e.g. "Claude Code", "OpenClaw", "LeanCopilot"
       tool_setup: ""           # tools, harnesses, plugins, orchestration, customizations
       cost:
@@ -91,7 +91,7 @@ fidelity:
 
 # review status
 review:
-  status: "agent-reviewed"                   # [required] unchecked | agent-reviewed | self-assessed | peer-reviewed | author-verified | other/freeform
+  status: "unchecked"                   # [required] unchecked | agent-reviewed | self-assessed | peer-reviewed | author-verified | other/freeform
   reviewers: []
   notes: ""                    # more details on the review process
 
