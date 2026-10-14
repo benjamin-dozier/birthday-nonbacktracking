@@ -91,6 +91,6 @@
    "inputRev": "v4.35.0",
    "inherited": true,
    "configFile": "lakefile.toml"}],
- "name": "nonbacktracking",
+ "name": "myproof",
  "lakeDir": ".lake",
  "fixedToolchain": false}

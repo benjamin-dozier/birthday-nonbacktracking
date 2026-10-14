@@ -1,12 +1,12 @@
 module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Combinatorics.Graph.Basic
-import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.Data.Int.Star
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.Tactic.FinCases
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Algebra.Order.Star.Int
+public import Mathlib.Combinatorics.Graph.Basic
+public import Mathlib.Combinatorics.SimpleGraph.Basic
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.Tactic.FinCases
 
 /-!
 # The birthday paradox for non-backtracking walks
@@ -24,6 +24,8 @@ nonzero cyclic translations as local plans.  This inverse-closed family acts
 sharply transitively on the `d - 1` legal continuations, so averaging over it
 has exactly the same fixed-start walk distribution used in the paper.
 -/
+
+@[expose] public section
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false
@@ -449,7 +451,7 @@ theorem completeRotation_forced (w : SimpleNonbacktrackingWalk G start (m + 1))
     (f : FreeOffsets d G start w) :
     HasForcedOffsets d G hG start w.1 (completeRotation d G hG start w f) := by
   intro i
-  rw [completeRotation, dif_pos ⟨i, rfl⟩]
+  rw [completeRotation, dite_eq_left ⟨i, rfl⟩]
   have hidx : internalIndexOf G start w.1 (internalVertex G start w.1 i) ⟨i, rfl⟩ = i := by
     apply internalVertex_injective G start w
     exact internalIndexOf_spec G start w.1 _ _
@@ -473,18 +475,18 @@ noncomputable def forcedRotationsEquivFreeOffsets
       requiredOffset d G hG start w.1 (internalIndexOf G start w.1 v hv)
       else rho.1 v) = rho.1 v
     by_cases hv : IsInternal G start w.1 v
-    · rw [dif_pos hv]
+    · rw [dite_eq_left hv]
       have hf := rho.2 (internalIndexOf G start w.1 v hv)
       rw [internalIndexOf_spec G start w.1 v hv] at hf
       exact hf.symm
-    · rw [dif_neg hv]
+    · rw [dite_eq_right hv]
   right_inv f := by
     classical
     funext v
     change (if hv : IsInternal G start w.1 v then
       requiredOffset d G hG start w.1 (internalIndexOf G start w.1 v hv)
       else f ⟨v, hv⟩) = f v
-    rw [dif_neg v.2]
+    rw [dite_eq_right v.2]
 
 noncomputable def internalVerticesEquiv
     (w : SimpleNonbacktrackingWalk G start (m + 1)) :
@@ -510,8 +512,8 @@ theorem card_freeOffsets (w : SimpleNonbacktrackingWalk G start (m + 1)) :
   rw [Nat.card_fun, natCard_offset]
   congr 1
   classical
-  letI : Fintype {v : V // IsInternal G start w.1 v} := Fintype.ofFinite _
-  letI : Fintype {v : V // ¬ IsInternal G start w.1 v} := Fintype.ofFinite _
+  let : Fintype {v : V // IsInternal G start w.1 v} := Fintype.ofFinite _
+  let : Fintype {v : V // ¬ IsInternal G start w.1 v} := Fintype.ofFinite _
   have hc : Fintype.card {v : V // IsInternal G start w.1 v} = m := by
     rw [← Nat.card_eq_fintype_card]
     exact card_internalVertices G start w
@@ -649,8 +651,8 @@ def validDeviationEquivSigma (start : OrientedEdge G) (rho : RotationSystem d V)
 theorem natCard_offset_ne (a : Offset d) :
     Nat.card {b : Offset d // b ≠ a} = d - 2 := by
   classical
-  letI : Fintype {b : Offset d // b ≠ a} := Fintype.ofFinite _
-  letI : Fintype {b : Offset d // b = a} := Fintype.ofFinite _
+  let : Fintype {b : Offset d // b ≠ a} := Fintype.ofFinite _
+  let : Fintype {b : Offset d // b = a} := Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card,
     Fintype.card_subtype_compl (fun b : Offset d ↦ b = a)]
   rw [card_offset]
@@ -1443,7 +1445,7 @@ theorem mem_exceptionalDeviations_iff (start : OrientedEdge G)
 theorem card_exceptionalDeviations_le (start : OrientedEdge G)
     (rho : GoodOmega d G hG start k) :
     (exceptionalDeviations d G hG start rho).card ≤ 4 * d := by
-  letI : Finite (ExceptionalDeviation d G hG start rho) :=
+  let : Finite (ExceptionalDeviation d G hG start rho) :=
     Finite.of_injective Subtype.val Subtype.val_injective
   let f : {q // q ∈ exceptionalDeviations d G hG start rho} →
       ExceptionalDeviation d G hG start rho :=
@@ -1477,7 +1479,7 @@ theorem finishDeviation_spec (start : OrientedEdge G)
     returnEndpoint d G hG start rho.1 k q =
       Dart.reverse G
         (sideDart d G hG start rho.1 (finishDeviation d G hG start rho q).1) := by
-  rw [finishDeviation, dif_neg hq]
+  rw [finishDeviation, dite_eq_right hq]
   exact (Classical.choose_spec <|
     existsUnique_finishDeviation d G hG start rho q <|
       by simpa [mem_exceptionalDeviations_iff] using hq).1
@@ -2732,8 +2734,8 @@ theorem countedEligible_lower (start : OrientedEdge G) (k : ℕ)
     (hkn : k < Fintype.card V) :
     k * Nat.card (GoodOmega d G hG start k) ≤
       4 * Nat.card (CountedEligibleReturn (d := d) G hG start k) := by
-  letI : Fintype (GoodOmega d G hG start k) := Fintype.ofFinite _
-  letI (rho : GoodOmega d G hG start k) :
+  let : Fintype (GoodOmega d G hG start k) := Fintype.ofFinite _
+  let (rho : GoodOmega d G hG start k) :
       Fintype {q : ValidDeviation d G hG start rho.1 k //
         q ∈ eligibleDeviations d G hG start rho} := Fintype.ofFinite _
   have hsum : ∑ _rho : GoodOmega d G hG start k, k ≤
@@ -2880,7 +2882,7 @@ theorem classified_le_two_mul_certified
       2 * Nat.card (CertifiedClassifiedReturn (d := d) G hG start k L) := by
   let E := ClassifiedEligibleReturn (d := d) G hG start k L
   let p : E → Prop := ClassifiedReturnCertified (d := d) G hG
-  letI : DecidablePred p := Classical.decPred _
+  let : DecidablePred p := Classical.decPred _
   change Nat.card E ≤ 2 * Nat.card {q : E // p q}
   have hUC : Nat.card {q : E // ¬ p q} ≤ Nat.card {q : E // p q} :=
     Nat.card_le_card_of_injective _ <|
@@ -4142,7 +4144,7 @@ theorem birthday_paradox
         ∀ (k : ℕ) (start : OrientedEdge G),
           C * Real.sqrt (Fintype.card V : ℝ) < (k : ℝ) →
             simpleProbability G start k < ε := by
-  letI : NeZero d := ⟨by omega⟩
+  let : NeZero d := ⟨by omega⟩
   refine TranslationOuter.birthday_paradox_of_high_good_plan_card_bound d hd
     ?_ ε hε
   intro V instV G hG k start _hk hkn hhigh

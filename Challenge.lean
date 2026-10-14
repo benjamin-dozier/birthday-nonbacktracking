@@ -1,7 +1,7 @@
 module
 
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Combinatorics.SimpleGraph.Basic
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Combinatorics.SimpleGraph.Basic
 
 /-!
 # The birthday paradox for non-backtracking walks
@@ -14,6 +14,8 @@ first oriented edge is fixed, and the probability in the theorem is written
 explicitly as a ratio of finite cardinalities.
 -/
 
+
+@[expose] public section
 
 variable {V : Type*} [Fintype V]
 
