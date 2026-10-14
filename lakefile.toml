@@ -1,12 +1,12 @@
 name = "myproof"
 version = "0.1.0"
-defaultTargets = ["NonbacktrackingWalksStatement", "NonbacktrackingWalksProof"]
+defaultTargets = ["Challenge", "Solution"]
 
 [[lean_lib]]
-name = "NonbacktrackingWalksStatement"
+name = "Challenge"
 
 [[lean_lib]]
-name = "NonbacktrackingWalksProof"
+name = "Solution"
 
 [[require]]
 name = "mathlib"
